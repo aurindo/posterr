@@ -6,14 +6,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.OffsetDateTime;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @ToString
 @Getter
 @Builder
-public class PostResponse {
+public class PostResponse extends RepresentationModel<PostResponse> {
 
     private String postId;
     private PostCreator creator;
@@ -34,7 +34,6 @@ public class PostResponse {
                 created(post.getCreated()).build();
     }
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @ToString
     @Getter
     @Builder

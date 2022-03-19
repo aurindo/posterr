@@ -1,15 +1,14 @@
 package com.aurindo.posterr.application.api.post.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.hateoas.RepresentationModel;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @ToString
 @Getter
 @Builder
-public class PostDataResponse {
+public class PostDataResponse extends RepresentationModel<PostDataResponse> {
 
     private String userId;
     private Long total;

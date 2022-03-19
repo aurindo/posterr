@@ -10,13 +10,24 @@ import java.util.List;
 
 @Service
 public class PostServiceImpl implements PostService {
+
     @Override
-    public Post fetchPostDataFromUser(String userId) {
-        return Post.builder().
+    public Post getById(String postId) {
+        User user = User.builder().id("1").username("John").build();
+
+        Post post = Post.builder().
                 id("1").
                 content("First post").
                 created(OffsetDateTime.now()).
-                type(Post.PostType.ORIGINAL).build();
+                type(Post.PostType.ORIGINAL).
+                creator(user).
+                build();
+        return post;
+    }
+
+    @Override
+    public Long fetchPostDataFromUser(String userId) {
+        return 10L;
     }
 
     @Override
