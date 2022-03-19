@@ -1,4 +1,4 @@
-package com.aurindo.posterr.posterr;
+package com.aurindo.posterr;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +8,9 @@ class PosterrApplicationTests {
 
 	@Test
 	void contextLoads() {
+
+
+
 	}
 
 }

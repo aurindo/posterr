@@ -1,4 +1,4 @@
-package com.aurindo.posterr.posterr.application.api.user;
+package com.aurindo.posterr.application.api.user.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -9,12 +9,10 @@ import lombok.ToString;
 @ToString
 @Getter
 @Builder
-public class UserResponse {
+public class UserDataResponse {
 
     private String id;
+    private String userName;
     private String joinedDate;
-    private Long numberFollowers;
-    private Long numberFolloweds;
-    private Long numberPosts;
 
 }

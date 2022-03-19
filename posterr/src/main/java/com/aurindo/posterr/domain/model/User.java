@@ -1,4 +1,4 @@
-package com.aurindo.posterr.posterr.domain.model;
+package com.aurindo.posterr.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
