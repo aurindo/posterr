@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping(value = "/api/v1/post")
 public interface PostResource {
@@ -29,11 +30,11 @@ public interface PostResource {
             @PathVariable(value = "userId", required = true) String userId);
 
     @GetMapping(
-            value = "/from-all/{limit}",
+            value = "/from-all",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<PostListResponse> fetchPostsFromAll(
-            @PathVariable(value = "limit", required = true) Integer limit);
+            @RequestParam(value = "limit", required = true) Integer limit);
 
 }

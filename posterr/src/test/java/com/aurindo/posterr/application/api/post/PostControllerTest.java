@@ -43,8 +43,8 @@ public class PostControllerTest {
 
     @Test
     public void whenRequestListPostsFromAllUserShouldReturnListPostsLimited() {
-        String limit = "10";
-        String path = "/api/v1/post/from-all/%s";
+        String limit = "limit=10";
+        String path = "/api/v1/post/from-all?%s";
         String url = String.format(path, limit);
 
         HttpHeaders headers = new HttpHeaders();
