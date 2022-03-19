@@ -38,7 +38,7 @@ public class PostController implements PostResource {
 
     @Override
     public ResponseEntity<PostDataResponse> fetchData(String userId) {
-        Long numberPosts = postService.fetchPostDataFromUser(userId);
+        Long numberPosts = postService.numberPostsFromUser(userId);
         PostDataResponse postDataResponse = PostDataResponse.builder().userId(userId).total(numberPosts).build();
 
         postDataResponse.add(linkTo(methodOn(PostController.class).fetchData(userId)).withSelfRel());

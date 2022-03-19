@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PostService {
 
-    Long fetchPostDataFromUser(String userId);
+    Long numberPostsFromUser(String userId);
 
     List<Post> fetchPostsFromAll(Integer limit);
 

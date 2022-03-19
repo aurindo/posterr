@@ -2,7 +2,6 @@ package com.aurindo.posterr.application.api.post.response;
 
 import com.aurindo.posterr.domain.model.Post;
 import com.aurindo.posterr.domain.model.User;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -27,7 +26,7 @@ public class PostResponse extends RepresentationModel<PostResponse> {
         PostCreator postCreator = PostCreator.builder().id(creator.getId()).userName(creator.getUsername()).build();
 
         return PostResponse.builder().
-                postId(post.getId()).
+                postId(post.getId().toString()).
                 creator(postCreator).
                 content(post.getContent()).
                 type(post.getType()).
