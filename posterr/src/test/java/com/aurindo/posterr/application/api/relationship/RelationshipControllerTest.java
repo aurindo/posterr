@@ -1,7 +1,6 @@
 package com.aurindo.posterr.application.api.relationship;
 
 import com.aurindo.posterr.application.api.relationship.response.RelationshipDataResponse;
-import com.aurindo.posterr.application.api.user.response.UserDataResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
