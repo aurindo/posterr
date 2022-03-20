@@ -7,4 +7,8 @@ public interface RelationshipService {
     Long numberOffollowedsByUser(String userId);
 
     boolean isFollowing(String currentUserId, String otherUserId);
+
+    Boolean followUser(String followerUserId, String followedUserId);
+
+    void unfollowUser(String currentUserId, String otherUserId);
 }

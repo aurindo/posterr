@@ -1,5 +1,6 @@
 package com.aurindo.posterr.application.api.relationship;
 
+import com.aurindo.posterr.application.api.relationship.request.CreateRelationshipRequest;
 import com.aurindo.posterr.application.api.relationship.response.RelationshipDataResponse;
 import com.aurindo.posterr.domain.model.Relationship;
 import com.aurindo.posterr.domain.model.User;
@@ -119,4 +120,87 @@ public class RelationshipControllerTest {
         assertThat(isFollowingResponse).isEqualTo("false");
     }
 
+    @Test
+    public void whenUserWouldLikeFollowAnotherUserShouldReturnFollowResponse() {
+
+        User userFollower = userRepository.save(User.builder().username("usernameA").build());
+        User userFollowed = userRepository.save(User.builder().username("usernameB").build());
+
+        String path = "/api/v1/relationship";
+        String url = String.format(path, userFollower.getId(), userFollowed.getId());
+
+        CreateRelationshipRequest createRelationshipRequest =
+                CreateRelationshipRequest.builder().
+                        followedUserId(userFollowed.getId()).
+                        followerUserId(userFollower.getId()).build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<Void> requestEntity = new HttpEntity(createRelationshipRequest, headers);
+
+        //when
+        ResponseEntity<String> responseEntity =
+                restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        String response = responseEntity.getBody();
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        //Double check
+        path = "/api/v1/relationship/%s/following/%s";
+        url = String.format(path, userFollower.getId(), userFollowed.getId());
+
+        headers.clearContentHeaders();
+        headers.set("content-type", MediaType.APPLICATION_JSON_VALUE);
+        requestEntity = new HttpEntity<>(headers);
+
+        //when
+        responseEntity =
+                restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+        String isFollowingResponse = responseEntity.getBody();
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(isFollowingResponse).isEqualTo("true");
+    }
+
+    @Test
+    public void whenUserWouldLikeToStopFollowAnotherUserShouldReturnTrueResponse() {
+
+        User userFollower = userRepository.save(User.builder().username("usernameA").build());
+        User userFollowed = userRepository.save(User.builder().username("usernameB").build());
+
+        relationshipRepository.save(Relationship.builder().follower(userFollower).followed(userFollowed).build());
+
+        String path = "/api/v1/relationship/%s/unfollow/%s";
+        String url = String.format(path, userFollower.getId(), userFollowed.getId());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        //when
+        ResponseEntity<String> responseEntity =
+                restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        //Double check
+        path = "/api/v1/relationship/%s/following/%s";
+        url = String.format(path, userFollower.getId(), userFollowed.getId());
+
+        headers.clearContentHeaders();
+        headers.set("content-type", MediaType.APPLICATION_JSON_VALUE);
+        requestEntity = new HttpEntity<>(headers);
+
+        //when
+        responseEntity =
+                restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+        String isFollowingResponse = responseEntity.getBody();
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(isFollowingResponse).isEqualTo("false");
+    }
 }

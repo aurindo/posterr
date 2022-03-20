@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 @Service
 public class RelationshipServiceImpl implements RelationshipService {
@@ -37,8 +38,28 @@ public class RelationshipServiceImpl implements RelationshipService {
         User currentUser = userRepository.findById(currentUserId).orElseThrow(() -> new EntityNotFoundException(otherUserId));
         User otherUser = userRepository.findById(otherUserId).orElseThrow(() -> new EntityNotFoundException(otherUserId));
 
-        Relationship relationship = relationshipRepository.isFollowing(currentUser, otherUser);
+        Relationship relationship = relationshipRepository.isFollowing(currentUser, otherUser).orElse(null);
 
         return relationship != null ? true : false;
+    }
+
+    @Override
+    public Boolean followUser(String followerUserId, String followedUserId) {
+        User userFollower = userRepository.findById(followerUserId).orElseThrow(() -> new EntityNotFoundException(followedUserId));
+        User userFollowed = userRepository.findById(followedUserId).orElseThrow(() -> new EntityNotFoundException(followedUserId));
+
+        Relationship relationship = Relationship.builder().follower(userFollower).followed(userFollowed).build();
+        relationshipRepository.save(relationship);
+
+        return true;
+    }
+
+    @Override
+    public void unfollowUser(String currentUserId, String otherUserId) {
+        User currentUser = userRepository.findById(currentUserId).orElseThrow(() -> new EntityNotFoundException(otherUserId));
+        User otherUser = userRepository.findById(otherUserId).orElseThrow(() -> new EntityNotFoundException(otherUserId));
+
+        Optional<Relationship> relationshipOptional = relationshipRepository.isFollowing(currentUser, otherUser);
+        relationshipOptional.ifPresent(relationship -> relationshipRepository.delete(relationship));
     }
 }
