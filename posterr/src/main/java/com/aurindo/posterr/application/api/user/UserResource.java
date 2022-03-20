@@ -15,6 +15,7 @@ public interface UserResource {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    ResponseEntity<UserDataResponse> fetchData(@PathVariable(value = "userId", required = true) String userId);
+    ResponseEntity<UserDataResponse> fetchData(
+            @PathVariable(value = "userId", required = true) String userId);
 
 }

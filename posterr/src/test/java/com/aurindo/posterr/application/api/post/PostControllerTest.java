@@ -124,7 +124,7 @@ public class PostControllerTest {
     }
 
     @Test
-    public void whenCreatePostShouldReturnPostCreated() {
+    public void whenRequestToCreatePostShouldReturnPostCreated() {
         String url = "/api/v1/post";
 
         CreatePostRequest createPostRequest =

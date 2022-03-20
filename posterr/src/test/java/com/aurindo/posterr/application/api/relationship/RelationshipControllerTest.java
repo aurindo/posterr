@@ -69,4 +69,54 @@ public class RelationshipControllerTest {
         assertThat(relationshipDataResponse.getFolloweds()).isEqualTo(1);
     }
 
+    @Test
+    public void whenUserWouldLikeToKnowIfFollowAnotherUserShouldReturnTrueResponse() {
+
+        User userFollower = userRepository.save(User.builder().username("usernameA").build());
+        User userFollowed = userRepository.save(User.builder().username("usernameB").build());
+
+        relationshipRepository.save(Relationship.builder().follower(userFollower).followed(userFollowed).build());
+
+        String path = "/api/v1/relationship/%s/following/%s";
+        String url = String.format(path, userFollower.getId(), userFollowed.getId());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        //when
+        ResponseEntity<String> responseEntity =
+                restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+        String isFollowingResponse = responseEntity.getBody();
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(isFollowingResponse).isEqualTo("true");
+    }
+
+    @Test
+    public void whenUserWouldLikeToKnowIfFollowAnotherUserShouldReturnFalseResponse() {
+
+        User userFollower = userRepository.save(User.builder().username("usernameA").build());
+        User userNotFollowed = userRepository.save(User.builder().username("NOT FOLLOWED").build());
+
+        relationshipRepository.save(Relationship.builder().follower(userFollower).followed(user).build());
+
+        String path = "/api/v1/relationship/%s/following/%s";
+        String url = String.format(path, userFollower.getId(), userNotFollowed.getId());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        //when
+        ResponseEntity<String> responseEntity =
+                restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+        String isFollowingResponse = responseEntity.getBody();
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(isFollowingResponse).isEqualTo("false");
+    }
+
 }

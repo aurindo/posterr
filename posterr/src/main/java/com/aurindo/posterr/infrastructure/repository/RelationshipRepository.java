@@ -7,9 +7,12 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface RelationshipRepository extends CrudRepository<Relationship, String> {
 
-    @Query("select count(*) from Relationship p where p.followed=:user")
+    @Query("select count(*) from Relationship p where p.followed = :user")
     Long numberOfFollowersByUser(User user);
 
-    @Query("select count(*) from Relationship p where p.follower=:user")
+    @Query("select count(*) from Relationship p where p.follower= :user")
     Long numberOffollowedsByUser(User user);
+
+    @Query("from Relationship p where p.follower = :currentUser and p.followed = :otherUser")
+    Relationship isFollowing(User currentUser, User otherUser);
 }

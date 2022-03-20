@@ -3,7 +3,7 @@ package com.aurindo.posterr.application.api.relationship;
 import com.aurindo.posterr.application.api.relationship.response.RelationshipDataResponse;
 import com.aurindo.posterr.domain.relationship.RelationshipService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,8 +17,16 @@ public class RelationshipController implements RelationshipResource {
     private RelationshipService relationshipService;
 
     @Override
-    public ResponseEntity<RelationshipDataResponse> fetchData(String userId) {
+    public ResponseEntity<String> currentUserFollowing(String userId, String otherUserId) {
+        Boolean isFollowing = relationshipService.isFollowing(userId, otherUserId);
 
+        return ResponseEntity.
+                ok().
+                body(isFollowing.toString());
+    }
+
+    @Override
+    public ResponseEntity<RelationshipDataResponse> fetchData(String userId) {
         RelationshipDataResponse relationshipDataResponse =
             RelationshipDataResponse.builder().
                 userId(userId).
@@ -28,6 +36,9 @@ public class RelationshipController implements RelationshipResource {
 
         relationshipDataResponse.add(linkTo(methodOn(RelationshipController.class).fetchData(userId)).withSelfRel());
 
-        return new ResponseEntity<>(relationshipDataResponse, HttpStatus.OK);
+        return ResponseEntity.
+                ok().
+                contentType(MediaTypes.HAL_JSON).
+                body(relationshipDataResponse);
     }
 }

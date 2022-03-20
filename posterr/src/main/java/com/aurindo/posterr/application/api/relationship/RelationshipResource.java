@@ -15,6 +15,17 @@ public interface RelationshipResource {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    ResponseEntity<RelationshipDataResponse> fetchData(@PathVariable(value = "userId", required = true) String userId);
+    ResponseEntity<RelationshipDataResponse> fetchData(
+            @PathVariable(value = "userId", required = true) String userId);
+
+    @GetMapping(
+            value = "/{userId}/following/{otherUserId}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    ResponseEntity<String> currentUserFollowing(
+            @PathVariable(value = "userId", required = true) String userId,
+            @PathVariable(value = "otherUserId", required = true) String otherUserId
+    );
 
 }
