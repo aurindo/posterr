@@ -1,5 +1,6 @@
 package com.aurindo.posterr.application.api.user;
 
+import com.aurindo.posterr.application.api.format.DateFormatter;
 import com.aurindo.posterr.application.api.user.response.UserDataResponse;
 import com.aurindo.posterr.domain.model.User;
 import com.aurindo.posterr.infrastructure.repository.PostRepository;
@@ -11,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,7 +59,7 @@ public class UserControllerTest {
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(userDataResponse.getId()).isEqualTo(userId);
-        assertThat(userDataResponse.getJoinedDate()).isEqualTo("date");
+        assertThat(userDataResponse.getJoinedDate()).isEqualTo(DateFormatter.formatter.format(new Date()));
         assertThat(userDataResponse.getUserName()).isEqualTo("John");
     }
 
