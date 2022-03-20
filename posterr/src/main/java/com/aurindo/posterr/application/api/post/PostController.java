@@ -13,10 +13,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,7 +68,7 @@ public class PostController implements PostResource {
     }
 
     @Override
-    public ResponseEntity fetchMyPosts(String userId, Pageable pageable) {
+    public ResponseEntity fetchPostsFromUser(String userId, Pageable pageable) {
         Page<Post> postPage = postService.fetchMyPosts(userId, pageable);
 
         Page<PostResponse> postResponsePage = getPostResponses(pageable, postPage);
@@ -80,7 +80,7 @@ public class PostController implements PostResource {
     }
 
     @Override
-    public ResponseEntity<PostResponse> createPosts(CreatePostRequest createPostRequest) {
+    public ResponseEntity<PostResponse> createPosts(@Valid CreatePostRequest createPostRequest) {
 
         Post post = postService.createPost(
                 createPostRequest.getUserId(),

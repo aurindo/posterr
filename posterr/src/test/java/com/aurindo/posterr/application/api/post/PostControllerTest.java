@@ -107,7 +107,7 @@ public class PostControllerTest {
 
         int page = 0;
         int size = 10;
-        String path = "/api/v1/post/from-me?userId=%s&page=%s&size=%s";
+        String path = "/api/v1/post/from-user?userId=%s&page=%s&size=%s";
         String url = String.format(path, user.getId(), page, size);
 
         HttpHeaders headers = new HttpHeaders();

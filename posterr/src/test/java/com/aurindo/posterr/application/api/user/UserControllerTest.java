@@ -2,7 +2,6 @@ package com.aurindo.posterr.application.api.user;
 
 import com.aurindo.posterr.application.api.format.DateFormatter;
 import com.aurindo.posterr.application.api.user.response.UserDataResponse;
-import com.aurindo.posterr.domain.model.User;
 import com.aurindo.posterr.infrastructure.repository.PostRepository;
 import com.aurindo.posterr.infrastructure.repository.RelationshipRepository;
 import com.aurindo.posterr.infrastructure.repository.UserRepository;
@@ -13,8 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;

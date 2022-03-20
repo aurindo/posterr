@@ -35,11 +35,11 @@ public interface PostResource {
     ResponseEntity fetchPostsFromAll(Pageable pageable);
 
     @GetMapping(
-            value = "/from-me",
+            value = "/from-user",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    ResponseEntity fetchMyPosts(
+    ResponseEntity fetchPostsFromUser(
             @RequestParam(value = "userId", required = true) String userId,
             Pageable pageable);
 

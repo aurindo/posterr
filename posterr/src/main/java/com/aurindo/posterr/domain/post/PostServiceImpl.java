@@ -1,5 +1,6 @@
 package com.aurindo.posterr.domain.post;
 
+import com.aurindo.posterr.domain.exception.NotFoundException;
 import com.aurindo.posterr.domain.model.Post;
 import com.aurindo.posterr.domain.model.User;
 import com.aurindo.posterr.infrastructure.repository.PostRepository;
@@ -34,7 +35,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createPost(String userId, String content, String parentId, String type) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId, User.class));
         Post parentPost = parentId != null ? postRepository.findById(parentId).orElse(null) : null;
 
         Post.PostType postType = Post.PostType.valueOf(Post.PostType.class, type);
