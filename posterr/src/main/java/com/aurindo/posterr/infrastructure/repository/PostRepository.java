@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface PostRepository extends CrudRepository<Post, String> {
 
-    List<Post> findAll();
+    List<Post> findAllByOrderByCreatedDesc();
 
-    @Query("select count(*) from Post p where p.creator=:userId")
+    @Query("select count(*) from Post p where p.creator.id=:userId")
     Long numberPostsFromUser(@Param("userId") String userId);
 }

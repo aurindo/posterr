@@ -4,11 +4,17 @@ import com.aurindo.posterr.application.api.post.response.PostDataResponse;
 import com.aurindo.posterr.application.api.post.response.PostListResponse;
 import com.aurindo.posterr.application.api.post.response.PostResponse;
 import com.aurindo.posterr.domain.model.Post;
+import com.aurindo.posterr.domain.model.User;
+import com.aurindo.posterr.infrastructure.repository.PostRepository;
+import com.aurindo.posterr.infrastructure.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+
+import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,13 +22,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PostControllerTest {
 
     @Autowired
-    TestRestTemplate restTemplate;
+    private TestRestTemplate restTemplate;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    private User user;
+
+    @BeforeEach
+    public void init() {
+        postRepository.findAll().forEach(post -> postRepository.delete(post));
+        userRepository.findAll().forEach(user -> userRepository.delete(user));
+
+        user = userRepository.save(User.builder().username("username").build());
+    }
 
     @Test
     public void whenRequestPostDataFromUserShouldReturnCompletePostDataResponse() {
-        String userId = "1";
+
+        postRepository.save(Post.builder().content("contentA").creator(user).type(Post.PostType.ORIGINAL).build());
+        postRepository.save(Post.builder().content("contentB").creator(user).type(Post.PostType.ORIGINAL).build());
+        postRepository.save(Post.builder().content("contentC").creator(user).type(Post.PostType.ORIGINAL).build()) ;
+
         String path = "/api/v1/post/%s/data";
-        String url = String.format(path, userId);
+        String url = String.format(path, user.getId());
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("content-type", MediaType.APPLICATION_JSON_VALUE);
@@ -35,12 +61,20 @@ public class PostControllerTest {
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(postDataResponse.getUserId()).isEqualTo(userId);
-        assertThat(postDataResponse.getTotal()).isEqualTo(10L);
+        assertThat(postDataResponse.getUserId()).isEqualTo(user.getId());
+        assertThat(postDataResponse.getTotal()).isEqualTo(3);
     }
 
     @Test
     public void whenRequestListPostsFromAllUserShouldReturnListPostsLimited() {
+
+        User user2 = userRepository.save(User.builder().username("username2").build());
+
+        postRepository.save(Post.builder().content("First post").creator(user).type(Post.PostType.ORIGINAL).build());
+        postRepository.save(Post.builder().content("contentB").creator(user).type(Post.PostType.ORIGINAL).build());
+        postRepository.save(Post.builder().content("contentC").creator(user).type(Post.PostType.ORIGINAL).build()) ;
+        postRepository.save(Post.builder().content("Last post").creator(user2).type(Post.PostType.ORIGINAL).build()) ;
+
         String limit = "limit=10";
         String path = "/api/v1/post/from-all?%s";
         String url = String.format(path, limit);
@@ -58,14 +92,12 @@ public class PostControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(postListResponse).isNotEqualTo(null);
         assertThat(postListResponse.getPostResponseList()).isNotEqualTo(null);
-        assertThat(postListResponse.getPostResponseList().size()).isEqualTo(3);
+        assertThat(postListResponse.getPostResponseList().size()).isEqualTo(4);
 
         PostResponse postResponse = postListResponse.getPostResponseList().get(0);
-        assertThat(postResponse.getContent()).isEqualTo("First post");
-//        assertThat(postResponse.getCreated()).isEqualTo(3);
-        assertThat(postResponse.getCreator().getId()).isEqualTo("1");
-        assertThat(postResponse.getCreator().getUserName()).isEqualTo("John");
-        assertThat(postResponse.getPostId()).isEqualTo("1");
+        assertThat(postResponse.getContent()).isEqualTo("Last post");
+        assertThat(postResponse.getCreator().getId()).isEqualTo(user2.getId());
+        assertThat(postResponse.getCreator().getUserName()).isEqualTo("username2");
         assertThat(postResponse.getType()).isEqualTo(Post.PostType.ORIGINAL);
     }
 

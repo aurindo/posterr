@@ -34,7 +34,7 @@ public class PostRepositoryTest {
 
         postRepository.save(post);
 
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAllByOrderByCreatedDesc();
 
         assertThat(posts).isNotEqualTo(null);
         assertThat(posts.size()).isEqualTo(1);

@@ -27,6 +27,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> fetchPostsFromAll(Integer limit) {
-        return postRepository.findAll();
+        return postRepository.findAllByOrderByCreatedDesc();
     }
 }
