@@ -1,14 +1,18 @@
 package com.aurindo.posterr.domain.post;
 
 import com.aurindo.posterr.domain.model.Post;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface PostService {
 
     Long numberPostsFromUser(String userId);
 
-    List<Post> fetchPostsFromAll(Integer limit);
+    Page<Post> fetchPostsFromAll(Pageable pageable);
 
     Post getById(String postId);
+
+    Page<Post> fetchMyPosts(String userId, Pageable pageable);
+
+    Post createPost(String userId, String content, String parentId, String type);
 }

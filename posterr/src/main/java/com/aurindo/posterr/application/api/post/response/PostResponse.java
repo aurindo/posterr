@@ -40,5 +40,4 @@ public class PostResponse extends RepresentationModel<PostResponse> {
         private String id;
         private String userName;
     }
-
 }

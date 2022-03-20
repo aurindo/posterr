@@ -1,14 +1,18 @@
 package com.aurindo.posterr.application.api.post;
 
+import com.aurindo.posterr.application.api.post.request.CreatePostRequest;
 import com.aurindo.posterr.application.api.post.response.PostDataResponse;
-import com.aurindo.posterr.application.api.post.response.PostListResponse;
 import com.aurindo.posterr.application.api.post.response.PostResponse;
+import com.aurindo.posterr.application.api.post.response.PostResponseModelAssembler;
 import com.aurindo.posterr.domain.model.Post;
 import com.aurindo.posterr.domain.post.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +30,11 @@ public class PostController implements PostResource {
     @Autowired
     private PostService postService;
 
+    private final PagedResourcesAssembler pagedResourcesAssembler;
+
+    @Autowired
+    private final PostResponseModelAssembler postResponseModelAssembler;
+
     @Override
     public ResponseEntity<PostResponse> getById(String postId) {
         Post post = postService.getById(postId);
@@ -33,7 +42,7 @@ public class PostController implements PostResource {
 
         postResponse.add(linkTo(methodOn(PostController.class).getById(postId)).withSelfRel());
 
-        return new ResponseEntity<>(postResponse, HttpStatus.OK);
+        return ResponseEntity.ok().body(postResponse);
     }
 
     @Override
@@ -43,25 +52,56 @@ public class PostController implements PostResource {
 
         postDataResponse.add(linkTo(methodOn(PostController.class).fetchData(userId)).withSelfRel());
 
-        return new ResponseEntity<>(postDataResponse, HttpStatus.OK);
+        return ResponseEntity.ok().body(postDataResponse);
     }
 
     @Override
-    public ResponseEntity<PostListResponse> fetchPostsFromAll(Integer limit) {
+    public ResponseEntity fetchPostsFromAll(Pageable pageable) {
+        Page<Post> postPage = postService.fetchPostsFromAll(pageable);
 
-        List<PostResponse> postResponseList = postService.fetchPostsFromAll(limit).stream().map(
+        Page<PostResponse> postResponsePage = getPostResponses(pageable, postPage);
+
+        return ResponseEntity.
+                ok().
+                contentType(MediaTypes.HAL_JSON).
+                body(pagedResourcesAssembler.toModel(postResponsePage, postResponseModelAssembler));
+    }
+
+    @Override
+    public ResponseEntity fetchMyPosts(String userId, Pageable pageable) {
+        Page<Post> postPage = postService.fetchMyPosts(userId, pageable);
+
+        Page<PostResponse> postResponsePage = getPostResponses(pageable, postPage);
+
+        return ResponseEntity.
+                ok().
+                contentType(MediaTypes.HAL_JSON).
+                body(pagedResourcesAssembler.toModel(postResponsePage, postResponseModelAssembler));
+    }
+
+    @Override
+    public ResponseEntity<PostResponse> createPosts(CreatePostRequest createPostRequest) {
+
+        Post post = postService.createPost(
+                createPostRequest.getUserId(),
+                createPostRequest.getContent(),
+                createPostRequest.getParentId(),
+                createPostRequest.getType());
+
+        PostResponse postResponse = PostResponse.factory(post);
+
+        postResponse.add(linkTo(methodOn(PostController.class).getById(post.getId())).withSelfRel());
+
+        return ResponseEntity.ok().body(postResponse);
+    }
+
+    private Page<PostResponse> getPostResponses(Pageable pageable, Page<Post> postPage) {
+        List<PostResponse> postResponseList = postPage.get().map(
                 post -> PostResponse.factory(post)).collect(Collectors.toList());
 
-        postResponseList.stream().forEach(postResponse -> {
-            Link selfLink = linkTo(methodOn(PostController.class)
-                    .getById(postResponse.getPostId())).withSelfRel();
-            postResponse.add(selfLink);
-        });
-
-        PostListResponse postListResponse = PostListResponse.builder().postResponseList(postResponseList).build();
-        postListResponse.add(linkTo(methodOn(PostController.class)
-                .fetchPostsFromAll(limit)).withSelfRel());
-
-        return new ResponseEntity<>(postListResponse, HttpStatus.OK);
+        Page<PostResponse> postResponsePage =
+                new PageImpl<>(postResponseList, pageable, postPage.getTotalElements());
+        return postResponsePage;
     }
+
 }

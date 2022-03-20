@@ -1,6 +1,11 @@
 package com.aurindo.posterr.application.api.user;
 
 import com.aurindo.posterr.application.api.user.response.UserDataResponse;
+import com.aurindo.posterr.domain.model.User;
+import com.aurindo.posterr.infrastructure.repository.PostRepository;
+import com.aurindo.posterr.infrastructure.repository.RelationshipRepository;
+import com.aurindo.posterr.infrastructure.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +19,22 @@ public class UserControllerTest {
 
     @Autowired
     TestRestTemplate restTemplate;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RelationshipRepository relationshipRepository;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @BeforeEach
+    public void init() {
+        relationshipRepository.findAll().forEach(obj -> relationshipRepository.delete(obj));
+        postRepository.findAll().forEach(obj -> postRepository.delete(obj));
+        userRepository.findAll().forEach(obj -> userRepository.delete(obj));
+    }
 
     @Test
     public void whenRequestUserDataFromUserShouldReturnCompleteUserDataResponse() {

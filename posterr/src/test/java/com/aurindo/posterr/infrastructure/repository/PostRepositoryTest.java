@@ -5,9 +5,11 @@ import com.aurindo.posterr.domain.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,10 +36,11 @@ public class PostRepositoryTest {
 
         postRepository.save(post);
 
-        List<Post> posts = postRepository.findAllByOrderByCreatedDesc();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Post> posts = postRepository.findAllByOrderByCreatedDesc(pageable);
 
         assertThat(posts).isNotEqualTo(null);
-        assertThat(posts.size()).isEqualTo(1);
+        assertThat(posts.getTotalElements()).isEqualTo(1);
     }
 
 }

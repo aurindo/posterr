@@ -3,6 +3,7 @@ package com.aurindo.posterr.application.api.relationship;
 import com.aurindo.posterr.application.api.relationship.response.RelationshipDataResponse;
 import com.aurindo.posterr.domain.model.Relationship;
 import com.aurindo.posterr.domain.model.User;
+import com.aurindo.posterr.infrastructure.repository.PostRepository;
 import com.aurindo.posterr.infrastructure.repository.RelationshipRepository;
 import com.aurindo.posterr.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,11 +27,15 @@ public class RelationshipControllerTest {
     @Autowired
     private RelationshipRepository relationshipRepository;
 
+    @Autowired
+    private PostRepository postRepository;
+
     private User user;
 
     @BeforeEach
     public void init() {
         relationshipRepository.findAll().forEach(obj -> relationshipRepository.delete(obj));
+        postRepository.findAll().forEach(obj -> postRepository.delete(obj));
         userRepository.findAll().forEach(obj -> userRepository.delete(obj));
 
         user = userRepository.save(User.builder().username("username").build());
