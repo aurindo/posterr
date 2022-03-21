@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,9 +33,9 @@ public class FollowersAndFollowingTest {
 
     @Test
     public void AddFollowers() {
-        User user = User.builder().username("John").dateJoined(OffsetDateTime.now()).build();
-        User follower1 = User.builder().username("Follower1").dateJoined(OffsetDateTime.now()).build();
-        User follower2 = User.builder().username("Follower2").dateJoined(OffsetDateTime.now()).build();
+        User user = User.builder().username("John").dateJoined(new Date()).build();
+        User follower1 = User.builder().username("Follower1").dateJoined(new Date()).build();
+        User follower2 = User.builder().username("Follower2").dateJoined(new Date()).build();
 
         user = userRepository.save(user);
         follower1 = userRepository.save(follower1);
@@ -56,9 +56,9 @@ public class FollowersAndFollowingTest {
 
     @Test
     public void whenUserWouldLikeKnowIfFollowingOtherUserShouldReturnTrueOrFalse() {
-        User user = User.builder().username("John").dateJoined(OffsetDateTime.now()).build();
-        User currentUser = User.builder().username("CurrentUser").dateJoined(OffsetDateTime.now()).build();
-        User otherUser = User.builder().username("OtherUser").dateJoined(OffsetDateTime.now()).build();
+        User user = User.builder().username("John").dateJoined(new Date()).build();
+        User currentUser = User.builder().username("CurrentUser").dateJoined(new Date()).build();
+        User otherUser = User.builder().username("OtherUser").dateJoined(new Date()).build();
 
         user = userRepository.save(user);
         currentUser = userRepository.save(currentUser);

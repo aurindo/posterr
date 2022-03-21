@@ -16,4 +16,7 @@ public interface PostRepository extends PagingAndSortingRepository<Post, String>
     Long numberPostsFromUser(@Param("userId") String userId);
 
     Page<Post> findAllByCreatorOrderByCreatedDesc(User user, Pageable pageable);
+
+    @Query("select count(*) from Post p where p.creator.id=:userId and p.created >= CURRENT_DATE")
+    Long numberPostsFromUserToday(User user);
 }

@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 public class ErrorResponse {
 
+    @Builder.Default
     private Date timestamp = new Date();
     private int status;
     private List<String> errors;

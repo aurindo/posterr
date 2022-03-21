@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Builder
@@ -20,7 +20,7 @@ public class Post {
     private String id;
 
     private String content;
-    private OffsetDateTime created;
+    private Date created;
     private PostType type;
 
     @ManyToOne
@@ -33,7 +33,7 @@ public class Post {
     @PrePersist
     public void prePersist() {
         id = UUID.randomUUID().toString();
-        created = OffsetDateTime.now();
+        created = new Date();
     }
 
     public enum PostType {

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Builder
@@ -27,12 +27,12 @@ public class Relationship {
     @JoinColumn(name = "followed_id")
     private User followed;
 
-    private OffsetDateTime created;
+    private Date created;
 
     @PrePersist
     public void prePersist() {
         id = UUID.randomUUID().toString();
-        created = OffsetDateTime.now();
+        created = new Date();
     }
 
 }

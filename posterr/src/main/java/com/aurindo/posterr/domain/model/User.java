@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +28,7 @@ public class User {
     @AlphanumericConstraint
     private String username;
 
-    private OffsetDateTime dateJoined;
+    private Date dateJoined;
 
     @OneToMany(mappedBy = "creator")
     private List<Post> posts;
@@ -36,7 +36,7 @@ public class User {
     @PrePersist
     public void prePersist() {
         id = UUID.randomUUID().toString();
-        dateJoined = OffsetDateTime.now();
+        dateJoined = new Date();
     }
 
 }
