@@ -1,5 +1,6 @@
-package com.aurindo.posterr.domain.relationship;
+package com.aurindo.posterr.domain.service.relationship;
 
+import com.aurindo.posterr.domain.exception.DuplicateRelationshipException;
 import com.aurindo.posterr.domain.exception.NotFoundException;
 import com.aurindo.posterr.domain.model.Relationship;
 import com.aurindo.posterr.domain.model.User;
@@ -53,6 +54,10 @@ public class RelationshipServiceImpl implements RelationshipService {
                 () -> new NotFoundException(followedUserId, User.class));
         User userFollowed = userRepository.findById(followedUserId).orElseThrow(
                 () -> new NotFoundException(followedUserId, User.class));
+
+        if (relationshipRepository.isFollowing(userFollower, userFollowed).isPresent()) {
+            throw new DuplicateRelationshipException(followerUserId, followedUserId);
+        }
 
         Relationship relationship = Relationship.builder().follower(userFollower).followed(userFollowed).build();
         relationshipRepository.save(relationship);

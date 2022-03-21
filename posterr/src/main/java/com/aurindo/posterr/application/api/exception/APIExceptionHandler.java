@@ -1,6 +1,7 @@
 package com.aurindo.posterr.application.api.exception;
 
 import com.aurindo.posterr.domain.exception.NotFoundException;
+import com.aurindo.posterr.domain.exception.PosterrException;
 import com.aurindo.posterr.domain.exception.RateLimitException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -49,8 +50,8 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, headers, status);
     }
 
-    @ExceptionHandler({RateLimitException.class })
-    public ResponseEntity<Object> handleRateLimitException(
+    @ExceptionHandler({PosterrException.class })
+    public ResponseEntity<Object> handlePosterrException(
             Exception ex, WebRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.builder().

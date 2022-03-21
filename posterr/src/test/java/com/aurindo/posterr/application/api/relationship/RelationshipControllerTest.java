@@ -202,4 +202,31 @@ public class RelationshipControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(isFollowingResponse).isEqualTo("false");
     }
+
+    @Test
+    public void whenUserTryTofollowAgainAnUserShouldReturn400ErrorResponse() {
+
+        User userFollowed = userRepository.save(User.builder().username("usernameB").build());
+
+        relationshipRepository.save(Relationship.builder().follower(user).followed(userFollowed).build());
+
+        String url = "/api/v1/relationship";
+
+        CreateRelationshipRequest createRelationshipRequest =
+                CreateRelationshipRequest.builder().
+                        followedUserId(userFollowed.getId()).
+                        followerUserId(user.getId()).build();
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<Void> requestEntity = new HttpEntity(createRelationshipRequest, headers);
+
+        //when
+        ResponseEntity<RelationshipDataResponse> responseEntity =
+                restTemplate.exchange(url, HttpMethod.POST, requestEntity, RelationshipDataResponse.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
 }

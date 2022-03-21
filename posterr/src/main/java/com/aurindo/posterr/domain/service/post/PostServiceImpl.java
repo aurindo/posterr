@@ -1,4 +1,4 @@
-package com.aurindo.posterr.domain.post;
+package com.aurindo.posterr.domain.service.post;
 
 import com.aurindo.posterr.domain.exception.NotFoundException;
 import com.aurindo.posterr.domain.exception.RateLimitException;

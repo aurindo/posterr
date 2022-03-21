@@ -1,4 +1,4 @@
-package com.aurindo.posterr.domain.relationship;
+package com.aurindo.posterr.domain.service.relationship;
 
 public interface RelationshipService {
 

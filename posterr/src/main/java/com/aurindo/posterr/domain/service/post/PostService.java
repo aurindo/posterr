@@ -1,4 +1,4 @@
-package com.aurindo.posterr.domain.post;
+package com.aurindo.posterr.domain.service.post;
 
 import com.aurindo.posterr.domain.model.Post;
 import org.springframework.data.domain.Page;

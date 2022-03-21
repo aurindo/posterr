@@ -2,7 +2,7 @@ package com.aurindo.posterr.application.api.relationship;
 
 import com.aurindo.posterr.application.api.relationship.request.CreateRelationshipRequest;
 import com.aurindo.posterr.application.api.relationship.response.RelationshipDataResponse;
-import com.aurindo.posterr.domain.relationship.RelationshipService;
+import com.aurindo.posterr.domain.service.relationship.RelationshipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;

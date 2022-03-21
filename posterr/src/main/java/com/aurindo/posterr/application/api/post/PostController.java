@@ -5,7 +5,7 @@ import com.aurindo.posterr.application.api.post.response.PostDataResponse;
 import com.aurindo.posterr.application.api.post.response.PostResponse;
 import com.aurindo.posterr.application.api.post.response.PostResponseModelAssembler;
 import com.aurindo.posterr.domain.model.Post;
-import com.aurindo.posterr.domain.post.PostService;
+import com.aurindo.posterr.domain.service.post.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
