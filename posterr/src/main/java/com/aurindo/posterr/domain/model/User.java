@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +25,7 @@ public class User {
     private String id;
 
     @NotBlank
-    @Max(value = 14, message = "Username not be greater than 14")
+    @Size(max = 14, message = "Username not be greater than 14")
     @AlphanumericConstraint
     private String username;
 

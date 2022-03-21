@@ -99,13 +99,12 @@ public class RelationshipControllerTest {
     public void whenUserWouldLikeToKnowIfFollowAnotherUserShouldReturnFalseResponse() {
 
         User userFollower = userRepository.save(User.builder().username("usernameA").build());
-        User userNotFollowed = userRepository.save(User.builder().username("NOT FOLLOWED").build());
+        User userNotFollowed = userRepository.save(User.builder().username("NOTFOLLOWED").build());
 
         relationshipRepository.save(Relationship.builder().follower(userFollower).followed(user).build());
 
         String path = "/api/v1/relationship/%s/following/%s";
         String url = String.format(path, userFollower.getId(), userNotFollowed.getId());
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("content-type", MediaType.APPLICATION_JSON_VALUE);
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
