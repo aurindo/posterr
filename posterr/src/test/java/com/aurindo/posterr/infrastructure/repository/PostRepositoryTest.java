@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +44,7 @@ public class PostRepositoryTest {
     public void savePost() {
         Post post = Post.builder().
                 content("test").
-                created(new Date()).
+                created(LocalDateTime.now()).
                 creator(user).
                 type(Post.PostType.ORIGINAL).build();
 
@@ -53,6 +55,31 @@ public class PostRepositoryTest {
 
         assertThat(posts).isNotEqualTo(null);
         assertThat(posts.getTotalElements()).isEqualTo(1);
+    }
+
+    @Test
+    public void numberPostsFromUserToday() {
+        Post post = Post.builder().
+                content("test").
+                created(LocalDateTime.now()).
+                creator(user).
+                type(Post.PostType.ORIGINAL).build();
+
+        Post post2 = Post.builder().
+                content("test2").
+                created(LocalDateTime.now()).
+                creator(user).
+                type(Post.PostType.ORIGINAL).build();
+
+        postRepository.save(post);
+        postRepository.save(post2);
+
+        Long postNumber = postRepository.numberPostsFromUserToday(
+                user,
+                LocalDate.now().atTime(0,0,0,0));
+
+        assertThat(postNumber).isNotEqualTo(null);
+        assertThat(postNumber).isEqualTo(2);
     }
 
 }

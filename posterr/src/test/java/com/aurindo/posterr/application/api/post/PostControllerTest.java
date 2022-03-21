@@ -149,4 +149,34 @@ public class PostControllerTest {
         assertThat(postResponse.getType()).isEqualTo(Post.PostType.ORIGINAL);
     }
 
+    @Test
+    public void whenUserTryExceedRateLimitShouldReturnError() {
+
+        postRepository.save(Post.builder().content("A").creator(user).type(Post.PostType.ORIGINAL).build());
+        postRepository.save(Post.builder().content("B").creator(user).type(Post.PostType.ORIGINAL).build());
+        postRepository.save(Post.builder().content("C").creator(user).type(Post.PostType.ORIGINAL).build());
+        postRepository.save(Post.builder().content("D").creator(user).type(Post.PostType.ORIGINAL).build());
+        postRepository.save(Post.builder().content("E").creator(user).type(Post.PostType.ORIGINAL).build());
+
+        String url = "/api/v1/post";
+
+        CreatePostRequest createPostRequest =
+                CreatePostRequest.builder().
+                        content("Sixth").
+                        userId(user.getId()).
+                        type(Post.PostType.ORIGINAL.toString()).build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<Void> requestEntity = new HttpEntity(createPostRequest, headers);
+
+        //when
+        ResponseEntity<PostResponse> responseEntity =
+                restTemplate.exchange(url, HttpMethod.POST, requestEntity, PostResponse.class);
+        PostResponse postResponse = responseEntity.getBody();
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
 }

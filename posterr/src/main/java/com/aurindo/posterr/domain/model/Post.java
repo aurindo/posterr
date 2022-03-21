@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -20,7 +22,7 @@ public class Post {
     private String id;
 
     private String content;
-    private Date created;
+    private LocalDateTime created;
     private PostType type;
 
     @ManyToOne
@@ -33,7 +35,7 @@ public class Post {
     @PrePersist
     public void prePersist() {
         id = UUID.randomUUID().toString();
-        created = new Date();
+        created = LocalDateTime.now();
     }
 
     public enum PostType {

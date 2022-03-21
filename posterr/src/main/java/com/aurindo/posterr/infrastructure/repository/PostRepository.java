@@ -8,6 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 public interface PostRepository extends PagingAndSortingRepository<Post, String> {
 
     Page<Post> findAllByOrderByCreatedDesc(Pageable pageable);
@@ -17,6 +21,6 @@ public interface PostRepository extends PagingAndSortingRepository<Post, String>
 
     Page<Post> findAllByCreatorOrderByCreatedDesc(User user, Pageable pageable);
 
-    @Query("select count(*) from Post p where p.creator.id=:userId and p.created >= CURRENT_DATE")
-    Long numberPostsFromUserToday(User user);
+    @Query("select count(*) from Post p where p.creator= :user and p.created >= :today")
+    Long numberPostsFromUserToday(User user, LocalDateTime today);
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @ToString
@@ -18,7 +19,7 @@ public class PostResponse extends RepresentationModel<PostResponse> {
     private PostCreator creator;
     private String content;
     private Post.PostType type;
-    private Date created;
+    private LocalDateTime created;
 
     public static PostResponse factory(Post post) {
 
