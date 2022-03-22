@@ -1,6 +1,7 @@
 package com.aurindo.posterr.domain.service.post;
 
 import com.aurindo.posterr.domain.exception.NotFoundException;
+import com.aurindo.posterr.domain.exception.PageLimitException;
 import com.aurindo.posterr.domain.exception.RateLimitException;
 import com.aurindo.posterr.domain.model.Post;
 import com.aurindo.posterr.domain.model.User;
@@ -34,7 +35,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<Post> fetchMyPosts(String userId, Pageable pageable) {
+    public Page<Post> fetchMyPosts(String userId, Pageable pageable, int limit) {
+        checkPageLimit(limit, pageable);
+
         User user = User.builder().id(userId).build();
         return postRepository.findAllByCreatorOrderByCreatedDesc(user, pageable);
     }
@@ -53,19 +56,27 @@ public class PostServiceImpl implements PostService {
         return postRepository.save(post);
     }
 
-    private void checkRateLimit(User user, int limit) {
-        if (!postRulesService.rateLimit(user, 5)) {
-            throw new RateLimitException(Post.class, user.getId(), 5);
-        }
-    }
-
     @Override
     public Long numberPostsFromUser(String userId) {
         return postRepository.numberPostsFromUser(userId);
     }
 
     @Override
-    public Page<Post> fetchPostsFromAll(Pageable pageable) {
+    public Page<Post> fetchPostsFromAll(Pageable pageable, int limit) {
+        checkPageLimit(limit, pageable);
+
         return postRepository.findAllByOrderByCreatedDesc(pageable);
+    }
+
+    private void checkRateLimit(User user, int limit) {
+        if (!postRulesService.rateLimit(user, 5)) {
+            throw new RateLimitException(Post.class, user.getId(), 5);
+        }
+    }
+
+    private void checkPageLimit(int limit, Pageable pageable) {
+        if (pageable.getPageSize() > limit) {
+            throw new PageLimitException(limit);
+        }
     }
 }

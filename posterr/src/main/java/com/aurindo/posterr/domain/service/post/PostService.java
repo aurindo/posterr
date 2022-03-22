@@ -8,11 +8,11 @@ public interface PostService {
 
     Long numberPostsFromUser(String userId);
 
-    Page<Post> fetchPostsFromAll(Pageable pageable);
+    Page<Post> fetchPostsFromAll(Pageable pageable, int limit);
 
     Post getById(String postId);
 
-    Page<Post> fetchMyPosts(String userId, Pageable pageable);
+    Page<Post> fetchMyPosts(String userId, Pageable pageable, int limit);
 
     Post createPost(String userId, String content, String parentId, String type);
 }

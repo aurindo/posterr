@@ -17,7 +17,7 @@ public interface PostResource {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<PostResponse> getById(
-            @PathVariable(value = "postId", required = true) String postId);
+            @PathVariable(value = "postId") String postId);
 
     @GetMapping(
             value = "/{userId}/data",
@@ -25,14 +25,15 @@ public interface PostResource {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<PostDataResponse> fetchData(
-            @PathVariable(value = "userId", required = true) String userId);
+            @PathVariable(value = "userId") String userId);
 
     @GetMapping(
             value = "/from-all",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    ResponseEntity fetchPostsFromAll(Pageable pageable);
+    ResponseEntity fetchPostsFromAll(
+            Pageable pageable);
 
     @GetMapping(
             value = "/from-user",
@@ -40,7 +41,16 @@ public interface PostResource {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity fetchPostsFromUser(
-            @RequestParam(value = "userId", required = true) String userId,
+            @RequestParam(value = "userId") String userId,
+            Pageable pageable);
+
+    @GetMapping(
+            value = "/from-user-home",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    ResponseEntity fetchPostsFromUserHome(
+            @RequestParam(value = "userId") String userId,
             Pageable pageable);
 
     @PostMapping(

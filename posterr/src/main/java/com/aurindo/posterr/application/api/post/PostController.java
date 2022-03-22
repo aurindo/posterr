@@ -30,10 +30,13 @@ public class PostController implements PostResource {
     @Autowired
     private PostService postService;
 
-    private final PagedResourcesAssembler pagedResourcesAssembler;
-
     @Autowired
     private final PostResponseModelAssembler postResponseModelAssembler;
+
+    private final PagedResourcesAssembler pagedResourcesAssembler;
+
+    private final int PAGE_LIMIT_HOME = 10;
+    private final int PAGE_LIMIT_PROFILE = 5;
 
     @Override
     public ResponseEntity<PostResponse> getById(String postId) {
@@ -57,7 +60,19 @@ public class PostController implements PostResource {
 
     @Override
     public ResponseEntity fetchPostsFromAll(Pageable pageable) {
-        Page<Post> postPage = postService.fetchPostsFromAll(pageable);
+        Page<Post> postPage = postService.fetchPostsFromAll(pageable, PAGE_LIMIT_HOME);
+
+        Page<PostResponse> postResponsePage = getPostResponses(pageable, postPage);
+
+        return ResponseEntity.
+                ok().
+                contentType(MediaTypes.HAL_JSON).
+                body(pagedResourcesAssembler.toModel(postResponsePage, postResponseModelAssembler));
+    }
+
+    @Override
+    public ResponseEntity fetchPostsFromUserHome(String userId, Pageable pageable) {
+        Page<Post> postPage = postService.fetchMyPosts(userId, pageable, PAGE_LIMIT_HOME);
 
         Page<PostResponse> postResponsePage = getPostResponses(pageable, postPage);
 
@@ -69,8 +84,7 @@ public class PostController implements PostResource {
 
     @Override
     public ResponseEntity fetchPostsFromUser(String userId, Pageable pageable) {
-        Page<Post> postPage = postService.fetchMyPosts(userId, pageable);
-
+        Page<Post> postPage = postService.fetchMyPosts(userId, pageable, PAGE_LIMIT_PROFILE);
         Page<PostResponse> postResponsePage = getPostResponses(pageable, postPage);
 
         return ResponseEntity.
