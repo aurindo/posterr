@@ -1,8 +1,7 @@
-package com.aurindo.posterr.application.api.exception;
+package com.aurindo.posterr.application.api.handlererror;
 
 import com.aurindo.posterr.domain.exception.NotFoundException;
 import com.aurindo.posterr.domain.exception.PosterrException;
-import com.aurindo.posterr.domain.exception.RateLimitException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

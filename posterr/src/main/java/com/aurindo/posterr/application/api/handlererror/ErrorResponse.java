@@ -1,4 +1,4 @@
-package com.aurindo.posterr.application.api.exception;
+package com.aurindo.posterr.application.api.handlererror;
 
 import lombok.Builder;
 import lombok.Getter;
