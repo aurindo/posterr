@@ -106,7 +106,7 @@ public class PostControllerTest {
         postRepository.save(Post.builder().content("Last post").creator(user2).type(Post.PostType.ORIGINAL).build()) ;
 
         int page = 0;
-        int size = 10;
+        int size = 5;
         String path = "/api/v1/post/from-user?userId=%s&page=%s&size=%s";
         String url = String.format(path, user.getId(), page, size);
 
