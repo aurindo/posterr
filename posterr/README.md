@@ -1,6 +1,6 @@
 #Posterr
 
-##Sections
+## Sections
  - [Stack](#Stack)
  - [How to run](#How-to-run)
  - [Features](#Features) 
@@ -30,8 +30,7 @@ for the second time and further execute the following command:
 
     $ ./gradlew bootRun
     
-Note:
-    To run tests execute the following command:
+**Note:** To run tests execute the following command:
     
     $ ./gradlew clean build test
  
