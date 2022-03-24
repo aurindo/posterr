@@ -39,6 +39,6 @@ public class Post {
     }
 
     public enum PostType {
-        ORIGINAL, REPORT, QUOTED
+        ORIGINAL, REPOST, QUOTED
     }
 }
