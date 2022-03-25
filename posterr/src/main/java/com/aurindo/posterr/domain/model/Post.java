@@ -1,5 +1,6 @@
 package com.aurindo.posterr.domain.model;
 
+import com.aurindo.posterr.domain.validation.EnumNamePattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +24,8 @@ public class Post {
 
     private String content;
     private LocalDateTime created;
+
+    @EnumNamePattern(regexp = "ORIGINAL|REPOST|QUOTED")
     private PostType type;
 
     @ManyToOne
