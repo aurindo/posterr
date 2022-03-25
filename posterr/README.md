@@ -325,7 +325,40 @@ for the second time and further execute the following command:
    }
    ```
    
+
+
 #### Planning
+The Product Manager wants to implement a new feature called "reply-to-post" (it's a lot like Twitter's These are regular posts that use "@ mentioning" at the beginning to indicate that it is a reply directly to a post. Reply posts should only be shown in a new, secondary feed on the user profile called "Posts and Replies" where all original posts and reply posts are shown. They should not be shown in the homepage feed.
+What you need to do:
+- Write down questions you have for the Product Manager about implementation.
+- Write about how you would solve this problem in as much detail as possible. Write about all of the changes to database/front-end/api/etc that you expect. You should write down any assumptions you are making from any questions for the Product Manager that you previously mentioned.
+
+
+
+**Questions:**
+- Should I as a user be able to see all Posts that another user has been mentioned?
+- What kind of user should be able to be mentioned by another user? Only the following users or all users?
+- How many users can be mentioned in a post?
+- Should the mentioned user receive a notification to make him aware?
+- What user has to do to tag another user?
+
+
+**Assumptions**:
+- The "Posts and Replies" is a secondary feed on the “User profile” screen, with that all users that are able to see the “User profile” feed also are able to see the “Post and Replies”.
+- The user only is able to mention the following users.
+- No, the mentioned user has to navigate to the "Posts and Replies" and check the mentions.
+- After adding “@” the app will display a list of possible usernames, if user type more characters they have to filter the possible usernames. Limit 5 usernames, query type “XXX%” order by asc.
+
+Changes:
+- Create a new table “mention” to store data about: who was mentioned, who made the mention, and what post. See diagram.
+?diagram image?
+
+- Create an endpoint to fetch all posts where a user was mentioned(paginated, limit 5 items per page)
+- Change the endpoint to create posts, adding the attribute "mentionedUser" in payload. When there is
+a "mentionedUSer" in the payload the application have to create the "mention" object and
+persis it on the database.   
+- Create an endpoint to return a list of items(username, user_id) by the first character of username, limit 5 items ordered by the username sorted in ascending order.
+
 
 #### Critique
  
