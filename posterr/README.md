@@ -351,16 +351,21 @@ What you need to do:
 
 Changes:
 - Create a new table “mention” to store data about: who was mentioned, who made the mention, and what post. See diagram.
-?diagram image?
+![plot](./images/diagram_feature_mentioned.png)
 
-- Create an endpoint to fetch all posts where a user was mentioned(paginated, limit 5 items per page)
-- Change the endpoint to create posts, adding the attribute "mentionedUser" in payload. When there is
-a "mentionedUSer" in the payload the application have to create the "mention" object and
+- Create an endpoint to fetch all posts where a user was mentioned(paginated, limit 5 items per page) by another.
+- Change the endpoint to create posts, adding the attribute "mentionedUser" in the payload. When there is
+a "mentionedUSer" in the payload the application has to create the "mention" object and
 persis it on the database.   
 - Create an endpoint to return a list of items(username, user_id) by the first character of username, limit 5 items ordered by the username sorted in ascending order.
 
 
 #### Critique
+In any project, it is always a challenge to get the code perfectly how you'd want it. Here is what you need to do for this section:
+
+- Reflect on this project, and write what you would improve if you had more time.
+- Write about scaling. If this project were to grow and have many users and posts, which parts do you think would fail first? In a real-life situation, what steps would you take to scale this product? What other types of technology and infrastructure might you need to use?
+
  
 
 
