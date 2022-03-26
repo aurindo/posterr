@@ -2,6 +2,7 @@
 
 ## Sections
  - [Stack](#Stack)
+ - [Architecture](#Architecture)
  - [How to run](#How-to-run)
  - [Features](#Features) 
  - [Planning](#Planning)
@@ -17,9 +18,15 @@
  
  **NOTES:**
  1. This application uses H2 as database, just for demonstration.
- 2. This application does not create, delete, list or update users. In case needed a user id, please use:
+ 2. This application does not create, delete, list or update users. Case you need a user id, please use:
   
     `userId = 891c10b7-267d-447e-9325-43343868e07f` 
+#### Architecture
+Application
+ ![plot](./images/diagram_architecture.png)
+
+Relational database
+ ![plot](./images/diagram_current.png)
  
 #### How to run
 To run the application on the local machine, if is the first time execute the following command:
@@ -364,7 +371,33 @@ persis it on the database.
 In any project, it is always a challenge to get the code perfectly how you'd want it. Here is what you need to do for this section:
 
 - Reflect on this project, and write what you would improve if you had more time.
-- Write about scaling. If this project were to grow and have many users and posts, which parts do you think would fail first? In a real-life situation, what steps would you take to scale this product? What other types of technology and infrastructure might you need to use?
+    - Add more tests (unit test, integration test and e2e tests)
+    - Add request rate limit by IP in each endpoint 
+    - Code coverage about average 80% (90% for main scenarios)
+    - Add Swagger to document endpoints
+    - Add a log framework
+    - Check if there is any exception flow that was not covered
+
+- Write about scaling. If this project were to grow and have many users and posts, 
+    1. which parts do you think would fail first?
+        - When a lot of clients start to make requests to the endpoint to create posts, and a lot of users load the home page screen and/or the user profile screen, the application will start to return the HTTP error 408 (timeout error), due to a concurrency problem. It will happen because the default SpringbBot configuration is limited to 200 simultaneous threads, and each thread will support a synchronous endpoints/requests that will reach the same external resource (database).
+         
+    2. In a real-life situation, what steps would you take to scale this product?
+    **Note:** Before each step identify and prioritize the problems
+        - Increase the number of simultaneous threads on the SpringBoot application, and increase the max number of connections on the database;
+        - Create X instances of the application and add a load balancer in front of those instances;
+        ![plot](./images/step_1.png)
+        - Move the database to a cloud environment. (ex.: AWS/Aurora)
+        ![plot](./images/step_2.png)
+        - Work on the endpoints that will write on the database to turn them asynchronous requests instead of synchronous (add a broker/Kafka);
+        ![plot](./images/step_3.png)        
+        - Split the application into 2 services, one for endpoints that will write on the database and another for the endpoints that will read information from the database
+        ![plot](./images/step_4.png)      
+        - Create a faster database to support the service that will only read from the database.
+        ![plot](./images/step_5.png)
+        - Move all infrastructure to a cloud environment and setup auto scaling
+        - Migrate each endpoint to a lambda function        
+    
 
  
 
